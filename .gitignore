@@ -1,6 +1,6 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
+!**/src/financeManagerApplication/**/target/
 !**/src/test/**/target/
 
 ### IntelliJ IDEA ###
@@ -11,6 +11,7 @@ target/
 *.iws
 *.iml
 *.ipr
+*.log
 
 ### Eclipse ###
 .apt_generated
@@ -28,7 +29,7 @@ target/
 /nbdist/
 /.nb-gradle/
 build/
-!**/src/main/**/build/
+!**/src/financeManagerApplication/**/build/
 !**/src/test/**/build/
 
 ### VS Code ###
