@@ -18,7 +18,7 @@ public class FioTests {
 //    Path From Source Root: Використовуйте для доступу до ресурсів з вихідного коду, особливо при написанні тестів.
 //    Path From Repository Root: Використовуйте при роботі з системами контролю версій для відносних шляхів в рамках репозиторію.
 
-    private final static String PATH_TO_EXIST_FILE_CSV = "book.csv";
+    private final static String PATH_TO_EXIST_FILE_CSV = "src/test/resources/book.csv";
     private final static String PATH_TO_NOT_EXIST_FILE_CSV = "src/test/resources/file1.csv";
     private final static String PATH_TO_EXIST_FILE_JSON = "book.csv";
     private final static String PATH_TO_NOT_EXIST_FILE_JSON = "file.csv";
