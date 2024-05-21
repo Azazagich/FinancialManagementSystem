@@ -8,6 +8,9 @@ import java.io.IOException;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * @see FileUtils
+ */
 public class FileUtilsTests {
 
 //    Absolute Path: Використовуйте, коли вам потрібно точно вказати розташування файлу на вашому комп'ютері.
