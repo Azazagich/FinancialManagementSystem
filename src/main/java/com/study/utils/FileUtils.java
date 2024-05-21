@@ -7,13 +7,14 @@ import java.net.URL;
 import java.util.Enumeration;
 
 /**
- *
+ * Utility class for file operations.
  */
 public class FileUtils {
 
     /**
      * Method searchFileByRepositoryRoot search path to our file, if file exist return true else return false.
      * Method using class File for searching
+     *
      * @param path
      * @return boolean value(true, false)
      */
@@ -30,6 +31,7 @@ public class FileUtils {
     /**
      * Method searchFileByRepositoryRoot search path to our file, if file exist return true else return false.
      * Method using class ClassLoader for searching
+     *
      * @param path
      * @return boolean value(true, false)
      * @throws IOException
@@ -48,6 +50,7 @@ public class FileUtils {
     /**
      * Method searchFileByRepositoryRoot search path to our file, if file exist return true else return false.
      * Method using class ClassLoader for searching
+     *
      * @param path
      * @return boolean value(true, false)
      */
