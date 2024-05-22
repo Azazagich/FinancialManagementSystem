@@ -9,58 +9,56 @@ import java.util.*;
 import static org.junit.Assert.*;
 
 public class ApacheCsvTests {
-    String[] HEADERS = {"author", "title"};
 
+    //All paths
     private final static String PATH_FILE_CSVBOOK = "src/test/resources/csvbookWithPayloadsAndHeaders.csv";
     private final static String PATH_FILE_CSVBOOK_EMPTY = "src/test/resources/csvbookempty.csv";
     private final static String PATH_FILE_CSVBOOK_PAYLOADS = "src/test/resources/csvbookWithPayloads.csv";
-    private final static String PATH_FILE_CSVBOOK_HEADERS = "src/test/resources/csvbookemptyWithHeaders.csv";
+    private final static String PATH_FILE_CSVBOOK_HEADERS = "src/test/resources/csvbookHeaders.csv";
+    private final static String PATH_FILE_CSVBOOK_USING_SEPARATE = "src/test/resources/csvUsingSep.csv";
 
-   String[] ReadCsvHeaders(String path) throws IOException {
+    //
+   String[] ReadCsvHeaders(String path, String ... headers) throws IOException {
        System.out.println("Path to csv: " + path);
 
-       CSVRecord headers;
+       CSVRecord header;
+
+       if (new File(path).length() == 0) {
+           return null;
+       }
 
        try (Reader in = new FileReader(path)) {
 
-           if (new File(path).length() == 0) {
-               return null;
-           }
-
            CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
-                   .setHeader(HEADERS)
+                   .setHeader(headers)
                    .setSkipHeaderRecord(false)
                    .build();
 
-           headers = csvFormat.parse(in).getRecords().get(0);
+           header = csvFormat.parse(in).getRecords().get(0);
        }
-       return headers.stream().toArray(String[]::new);
+       return header.stream().toArray(String[]::new);
    }
 
     @Test
     void successReadCsvHeadersWithoutPayload() throws IOException {
-        assertArrayEquals(HEADERS, ReadCsvHeaders(PATH_FILE_CSVBOOK));
+        assertArrayEquals(new String[]{"author", "title"}, ReadCsvHeaders(PATH_FILE_CSVBOOK_HEADERS, "author", "title"));
     }
 
     @Test
     void failedReadCsvHeadersWithoutPayload() throws IOException {
-        assertNull(ReadCsvHeaders(PATH_FILE_CSVBOOK_EMPTY));
+        assertNull(ReadCsvHeaders(PATH_FILE_CSVBOOK_EMPTY, "author", "title"));
     }
 
 
-    Map<String, String> readCsvPayload(String path) throws IOException{
+    Map<String, String> readCsvPayload(String path, String ... headers) throws IOException{
         System.out.println("Path to csv: " + path);
 
         Map<String, String> data = new HashMap<>();
 
         try (Reader in = new FileReader(path)) {
 
-            if (new File(path).length() == 0) {
-                return null;
-            }
-
             CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
-                    .setHeader(HEADERS)
+                    .setHeader(headers)
                     .setSkipHeaderRecord(true)
                     .build();
 
@@ -69,28 +67,32 @@ public class ApacheCsvTests {
             for (CSVRecord record : records) {
                 data.put(record.get("author"), record.get("title"));
             }
+
+            if (new File(path).length() == 0) {
+                return null;
+            }
         }
         return data;
     }
 
     @Test
     void successReadCsvPayloadWithoutHeaders() throws IOException{
-        HashMap<String, String> payload = (HashMap<String, String>) readCsvPayload(PATH_FILE_CSVBOOK);
+        HashMap<String, String> payload = (HashMap<String, String>) readCsvPayload(PATH_FILE_CSVBOOK_PAYLOADS, "author", "title");
         assertNotNull(payload);
         assertTrue(payload.size() == 2);
     }
 
     @Test
     void failedReadCsvPayloadWithoutHeaders() throws  IOException{
-        HashMap<String, String> payload = (HashMap<String, String>)readCsvPayload(PATH_FILE_CSVBOOK_EMPTY);
+        HashMap<String, String> payload = (HashMap<String, String>)readCsvPayload(PATH_FILE_CSVBOOK_EMPTY, "author", "title");
         assertNull(payload);
 //        assertTrue(payload.size() == 0);
     }
 
-    boolean searchHeaders(String path) throws IOException {
+    boolean searchHeaders(String path, String ... headers) throws IOException {
         System.out.println("Path to csv: " + path);
 
-        CSVRecord headers;
+        CSVRecord header;
 
         try (Reader in = new FileReader(path)) {
 
@@ -99,89 +101,110 @@ public class ApacheCsvTests {
             }
 
             CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
-                    .setHeader(HEADERS)
+                    .setHeader(headers)
                     .setSkipHeaderRecord(false)
                     .build();
 
-            headers = csvFormat.parse(in).getRecords().get(0);
+            header = csvFormat.parse(in).getRecords().get(0);
         }
-        String[] header = headers.stream().toArray(String[]::new);
+        String[] myheader = header.stream().toArray(String[]::new);
 
-        return Arrays.equals(HEADERS, header);
-
+        return Arrays.equals(headers, myheader);
     }
 
     @Test
     void existHeaders() throws IOException {
-       assertTrue(searchHeaders(PATH_FILE_CSVBOOK));
-       assertTrue(searchHeaders(PATH_FILE_CSVBOOK_HEADERS));
+       assertTrue(searchHeaders(PATH_FILE_CSVBOOK, "author", "title"));
+       assertTrue(searchHeaders(PATH_FILE_CSVBOOK_HEADERS, "author", "title"));
     }
 
     @Test
     void notExistHeaders() throws IOException {
-        assertFalse(searchHeaders(PATH_FILE_CSVBOOK_EMPTY));
-        assertFalse(searchHeaders(PATH_FILE_CSVBOOK_PAYLOADS));
+        assertFalse(searchHeaders(PATH_FILE_CSVBOOK_EMPTY, "author", "title"));
+        assertFalse(searchHeaders(PATH_FILE_CSVBOOK_PAYLOADS, "author", "title"));
     }
 
-    @Test
-    void writeCsvHeadersWithoutPayload() {
-        
-    }
-
-    @Test
-    void writeCsvPayloadWithoutHeaders() {
-        // read book.csv
-    }
-
-    @Test
-    void clearCsvPayload() {
-        // read book.csv
-    }
-
-    @Test
-    void clearAllCsv() {
-        // read book.csv
-    }
-
-    @Test
-    void writeToCsvUsingAnotherSeparator() {
-        // read book.csv
-    }
-
-
-    //TODO
-    HashMap<String,String> headerAutoDetection(String path) throws Exception {
+    boolean writeCsvHeaders(String path, String ... headers) throws Exception {
         System.out.println("Path to csv: " + path);
 
-        Map<String,String> data = new HashMap<>();
+        CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
+                .setHeader(headers)
+                .setSkipHeaderRecord(false)
+                .build();
 
-        Reader in = new FileReader(path);
-
-        Iterable<CSVRecord> records = CSVFormat.RFC4180.builder()
-                .setHeader()
-                .setSkipHeaderRecord(true)
-                .build()
-                .parse(in);
-
-        for (CSVRecord record : records) {
-            data.put(record.get("author"),record.get("title"));
+        if(searchHeaders(path)){
+            throw new Exception("Headers exist");
         }
 
-        return (HashMap<String, String>) data;
+        try (CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(path, true), csvFormat)) {
+            csvPrinter.printRecord(headers);
+            return true;
+        }
+   }
+
+    @Test
+    void writeCsvHeadersWithoutPayload() throws Exception {
+        assertTrue(writeCsvHeaders(PATH_FILE_CSVBOOK_EMPTY, "title", "book"));
     }
 
 
+    boolean writeCsvPayload(String path, String ... data) throws IOException{
+        System.out.println("Path to csv: " + path);
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ApacheCsvTests that = (ApacheCsvTests) o;
-        return Arrays.equals(HEADERS, that.HEADERS);
+        CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
+                .setHeader()
+                .setSkipHeaderRecord(true)
+                .build();
+
+        try (CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(path, true), csvFormat)) {
+            csvPrinter.printRecord(data);
+            return true;
+        }
     }
 
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(HEADERS);
+    @Test
+    void writeCsvPayloadWithoutHeaders() throws Exception {
+        assertTrue(writeCsvPayload(PATH_FILE_CSVBOOK_PAYLOADS, "data1", "data2","data3"));
     }
+
+
+    boolean writeUsingAnotherSeparator(String path, char separator, String ... data) throws Exception {
+        System.out.println("Path to csv: " + path);
+
+        CSVFormat csvFormat = CSVFormat.DEFAULT.withDelimiter(separator).builder()
+                .setHeader()
+                .setSkipHeaderRecord(true)
+//                .setRecordSeparator(separator)
+                .build();
+
+        try (CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(path, true), csvFormat)) {
+            csvPrinter.printRecord(data);
+            return true;
+        }
+    }
+
+    @Test
+    void writeToCsvUsingAnotherSeparator() throws Exception {
+        assertTrue(writeUsingAnotherSeparator(PATH_FILE_CSVBOOK_USING_SEPARATE, '*', "ggg","wkd","wdw"));
+    }
+
+//    HashMap<String,String> headerAutoDetection(String path) throws Exception {
+//        System.out.println("Path to csv: " + path);
+//
+//        Map<String,String> data = new HashMap<>();
+//
+//        Reader in = new FileReader(path);
+//
+//        Iterable<CSVRecord> records = CSVFormat.RFC4180.builder()
+//                .setHeader()
+//                .setSkipHeaderRecord(true)
+//                .build()
+//                .parse(in);
+//
+//        for (CSVRecord record : records) {
+//            data.put(record.get("author"),record.get("title"));
+//        }
+//
+//        return (HashMap<String, String>) data;
+//    }
 }
