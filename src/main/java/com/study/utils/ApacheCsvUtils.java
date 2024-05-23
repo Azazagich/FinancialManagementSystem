@@ -70,7 +70,8 @@ public class ApacheCsvUtils {
     private final static boolean APPEND_IN_FILE = true;
 
     /**
-     * Method which read headers from CSV file and return array of String if method not work threw exception
+     * Reads headers from a CSV file and returns an array of strings.
+     * If the method encounters an exception, it throws IOException.
      *
      * @param headers | All header strings which contains in our csv file
      * @param path | Path to our csv file
@@ -106,7 +107,7 @@ public class ApacheCsvUtils {
    }
 
     /**
-     * Method which read payload from CSV file and return map of data if method not work threw exception
+     * Reads payload data from a CSV file and returns a map of data.
      *
      * @param headers | All header strings which contains in our csv file
      * @param path | Path to our csv file
@@ -146,7 +147,8 @@ public class ApacheCsvUtils {
     }
 
     /**
-     * Method check is headers in file CSV or not if headers is return true, else return false
+     * Checks if the headers are present in a CSV file.
+     * Returns true if the headers are found, otherwise false.
      *
      * @param headers | All header strings which contains in our csv file
      * @param path | Path to our csv file
@@ -162,7 +164,7 @@ public class ApacheCsvUtils {
     }
 
     /**
-     * Method write headers in file CSV if data successful add return true else threw IOException
+     * Writes headers to a CSV file. Returns true if the operation is successful, otherwise throws an IOException.
      *
      * @param headers | All header strings which contains in our csv file
      * @param path | Path to our csv file
@@ -194,7 +196,7 @@ public class ApacheCsvUtils {
     }
 
     /**
-     * Method write payload in file CSV if data successful add return true else threw IOException
+     * Writes payload data to a CSV file. Returns true if the operation is successful, otherwise throws an IOException.
      *
      * @param data | Our data for which will add to file
      * @param path | Path to our csv file
@@ -222,7 +224,7 @@ public class ApacheCsvUtils {
     }
 
     /**
-     * Method write data with another separator in file CSV if data successful add return true else threw IOException
+     * Writes data with another separator in file CSV if data successful add return true else threw IOException
      *
      * @param path path to our csv file
      * @param separator for separate our data in csv file
