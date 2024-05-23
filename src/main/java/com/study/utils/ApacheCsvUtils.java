@@ -16,22 +16,42 @@ public class ApacheCsvUtils {
     /**
      * int field using in method for checking is file empty or not
      * */
-    private final int EMPTY_FILE_SIZE = 0;
+    private static final int EMPTY_FILE_SIZE = 0;
 
     /**
      * int field for determine header index in method
      * */
-    private final int HEADERS_INDEX = 0;
+    private static final int HEADERS_INDEX = 0;
+
+    /**
+     * int field contain index of first column in csv
+     * */
+    private final static int INDEX_OF_FIRST_COLUMN = 0;
+
+    /**
+     * int field contain index of second column in csv
+     * */
+    private final static int INDEX_OF_SECOND_COLUMN = 1;
+
+    /**
+     * String[] field contain
+     * */
+    private final static String[] EMPTY_FILES = new String[0];
 
     /**
      * String[] field contain our headers
      * */
-    private String[] headersInFile = {"author", "title"};
+    private final static String[] HEADERS_IN_FILE = {"author", "title"};
 
     /**
-     * boolean field what calling when our data was success add to file
+     * boolean field what calling when our data was successful add to file
      * */
-    private final static boolean IS_WRITE_IN_FILE = true;
+    private final static boolean SUCCESSFUL_WRITE_IN_FILE = true;
+
+    /**
+     * boolean field what calling when our data was unsuccessful add to file
+     * */
+    private final static boolean NOT_WRITE_IN_FILE = false;
 
     /**
      * boolean if true, then data will be written to the end of the file rather than the beginning.
@@ -46,13 +66,13 @@ public class ApacheCsvUtils {
      * @return String of headers
      * @throws IOException
      * */
-    String[] readCsvHeaders(String path, String ... headers) throws IOException {
+   public static String[] readCsvHeaders(String path, String ... headers) throws IOException {
         System.out.println("Path to csv: " + path);
 
         CSVRecord header;
 
         if (new File(path).length() == EMPTY_FILE_SIZE) {
-            return new String[0];
+            return EMPTY_FILES;
         }
 
         try (Reader in = new FileReader(path)) {
@@ -64,11 +84,12 @@ public class ApacheCsvUtils {
 
             header = csvFormat.parse(in).getRecords().get(HEADERS_INDEX);
         } catch (IOException ex){
+            System.out.println(ex);
             throw new IOException(ex);
         }
 
         return header.stream().toArray(String[]::new);
-    }
+   }
 
     /**
      * method which read payload from CSV file and return map of data if method not work threw exception
@@ -78,7 +99,7 @@ public class ApacheCsvUtils {
      * @return Map String key: data in field1, String value: data in field2
      * @throws IOException
      * */
-    Map<String, String> readCsvPayload(String path, String ... headers) throws IOException{
+    public static Map<String, String> readCsvPayload(String path, String ... headers) throws IOException{
         System.out.println("Path to csv: " + path);
 
         Map<String, String> data = new HashMap<>();
@@ -97,7 +118,8 @@ public class ApacheCsvUtils {
             Iterable<CSVRecord> records = csvFormat.parse(in);
 
             for (CSVRecord record : records) {
-                data.put(record.get(headersInFile[0]), record.get(headersInFile[1]));
+                data.put(record.get(HEADERS_IN_FILE[INDEX_OF_FIRST_COLUMN]),
+                        record.get(HEADERS_IN_FILE[INDEX_OF_SECOND_COLUMN]));
             }
         } catch (IOException ex){
             throw new IOException(ex);
@@ -114,7 +136,7 @@ public class ApacheCsvUtils {
      * @return boolean value(true, false)
      * @throws IOException
      * */
-    boolean searchHeaders(String path, String ... headers) throws IOException {
+    public static boolean searchHeaders(String path, String ... headers) throws IOException {
         System.out.println("Path to csv: " + path);
         return Arrays.equals(headers,  readCsvHeaders(path, headers));
     }
@@ -127,7 +149,7 @@ public class ApacheCsvUtils {
      * @return  boolean value(true, false)
      * @throws IOException
      * */
-    boolean writeCsvHeaders(String path, String ... headers) throws Exception {
+    public static boolean writeCsvHeaders(String path, String ... headers) throws Exception {
         System.out.println("Path to csv: " + path);
 
         CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
@@ -136,14 +158,16 @@ public class ApacheCsvUtils {
                 .build();
 
         if(searchHeaders(path)){
-            throw new IOException("Headers is exist");
+            return NOT_WRITE_IN_FILE;
         }
 
         try (CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(path, APPEND_IN_FILE), csvFormat)) {
             csvPrinter.printRecord(headers);
-
-            return IS_WRITE_IN_FILE;
+        } catch(Exception ex) {
+            throw new IOException("Headers is exist" + ex);
         }
+
+            return SUCCESSFUL_WRITE_IN_FILE;
     }
 
     /**
@@ -154,7 +178,7 @@ public class ApacheCsvUtils {
      * @return  boolean value(true, false)
      * @throws IOException
      * */
-    boolean writeCsvPayload(String path, String ... data) throws IOException{
+    public static boolean writeCsvPayload(String path, String ... data) throws IOException{
         System.out.println("Path to csv: " + path);
 
         CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
@@ -168,7 +192,7 @@ public class ApacheCsvUtils {
             throw new IOException(ex);
         }
 
-        return IS_WRITE_IN_FILE;
+        return SUCCESSFUL_WRITE_IN_FILE;
     }
 
     /**
@@ -180,7 +204,7 @@ public class ApacheCsvUtils {
      * @return  boolean value(true, false)
      * @throws IOException
      * */
-    boolean writeUsingAnotherSeparator(String path, char separator, String ... data) throws Exception {
+    public static boolean writeUsingAnotherSeparator(String path, char separator, String ... data) throws Exception {
         System.out.println("Path to csv: " + path);
 
         CSVFormat csvFormat = CSVFormat.DEFAULT.withDelimiter(separator).builder()
@@ -193,8 +217,7 @@ public class ApacheCsvUtils {
         } catch (IOException ex){
             throw new IOException(ex);
         }
-        
-        return IS_WRITE_IN_FILE;
-    }
 
+        return SUCCESSFUL_WRITE_IN_FILE;
+    }
 }
