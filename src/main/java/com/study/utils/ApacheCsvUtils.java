@@ -36,7 +36,7 @@ public class ApacheCsvUtils {
     /**
      * String[] field contain
      * */
-    private final static String[] EMPTY_FILES = new String[0];
+    private final static String[] EMPTY_STRING_ARRAY = new String[0];
 
     /**
      * String[] field contain our headers
@@ -51,7 +51,7 @@ public class ApacheCsvUtils {
     /**
      * boolean field what calling when our data was unsuccessful add to file
      * */
-    private final static boolean NOT_WRITE_IN_FILE = false;
+    private final static boolean FAIL_WRITE_IN_FILE = false;
 
     /**
      * boolean if true, then data will be written to the end of the file rather than the beginning.
@@ -61,10 +61,13 @@ public class ApacheCsvUtils {
     /**
      * method which read headers from CSV file and return array of String if method not work threw exception
      *
-     * @param headers
-     * @param path
-     * @return String of headers
-     * @throws IOException
+     * @param headers all header strings which contains in our csv file
+     * @param path  path to our csv file
+     * @return Array strings from headers
+     * @throws IOException -if the named file exists but is a directory rather than a regular file,
+     * does not exist but cannot be created, or cannot be opened for any other reason
+     * FileNotFoundException – if the named file does not exist, is a directory rather than a regular file,
+     * or for some other reason cannot be opened for reading.
      * */
    public static String[] readCsvHeaders(String path, String ... headers) throws IOException {
         System.out.println("Path to csv: " + path);
@@ -72,7 +75,7 @@ public class ApacheCsvUtils {
         CSVRecord header;
 
         if (new File(path).length() == EMPTY_FILE_SIZE) {
-            return EMPTY_FILES;
+            return EMPTY_STRING_ARRAY;
         }
 
         try (Reader in = new FileReader(path)) {
@@ -94,10 +97,13 @@ public class ApacheCsvUtils {
     /**
      * method which read payload from CSV file and return map of data if method not work threw exception
      *
-     * @param path
-     * @param headers
+     * @param headers all header strings which contains in our csv file
+     * @param path  path to our csv file
      * @return Map String key: data in field1, String value: data in field2
-     * @throws IOException
+     * @throws IOException -if the named file exists but is a directory rather than a regular file,
+     * does not exist but cannot be created, or cannot be opened for any other reason
+     * FileNotFoundException – if the named file does not exist, is a directory rather than a regular file,
+     * or for some other reason cannot be opened for reading.
      * */
     public static Map<String, String> readCsvPayload(String path, String ... headers) throws IOException{
         System.out.println("Path to csv: " + path);
@@ -131,10 +137,13 @@ public class ApacheCsvUtils {
     /**
      * method check is headers in file CSV or not if headers is return true, else return false
      *
-     * @param path
-     * @param headers
+     * @param headers all header strings which contains in our csv file
+     * @param path  path to our csv file
      * @return boolean value(true, false)
-     * @throws IOException
+     *  IOException -if the named file exists but is a directory rather than a regular file,
+     *  does not exist but cannot be created, or cannot be opened for any other reason
+     *  FileNotFoundException – if the named file does not exist, is a directory rather than a regular file,
+     *  or for some other reason cannot be opened for reading.
      * */
     public static boolean searchHeaders(String path, String ... headers) throws IOException {
         System.out.println("Path to csv: " + path);
@@ -144,10 +153,13 @@ public class ApacheCsvUtils {
     /**
      * method write headers in file CSV if data successful add return true else threw IOException
      *
-     * @param path
-     * @param headers
+     * @param headers all header strings which contains in our csv file
+     * @param path  path to our csv file
      * @return  boolean value(true, false)
-     * @throws IOException
+     * @throws IOException -if the named file exists but is a directory rather than a regular file,
+     *  does not exist but cannot be created, or cannot be opened for any other reason
+     *  FileNotFoundException – if the named file does not exist, is a directory rather than a regular file,
+     *  or for some other reason cannot be opened for reading.
      * */
     public static boolean writeCsvHeaders(String path, String ... headers) throws Exception {
         System.out.println("Path to csv: " + path);
@@ -158,7 +170,7 @@ public class ApacheCsvUtils {
                 .build();
 
         if(searchHeaders(path)){
-            return NOT_WRITE_IN_FILE;
+            return FAIL_WRITE_IN_FILE;
         }
 
         try (CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(path, APPEND_IN_FILE), csvFormat)) {
@@ -173,10 +185,13 @@ public class ApacheCsvUtils {
     /**
      * method write payload in file CSV if data successful add return true else threw IOException
      *
-     * @param path
-     * @param data
+     * @param data our data for which will add to file
+     * @param path path to our csv file
      * @return  boolean value(true, false)
-     * @throws IOException
+     * @throws IOException if the named file exists but is a directory rather than a regular file,
+     * does not exist but cannot be created, or cannot be opened for any other reason
+     * FileNotFoundException – if the named file does not exist, is a directory rather than a regular file,
+     * or for some other reason cannot be opened for reading.
      * */
     public static boolean writeCsvPayload(String path, String ... data) throws IOException{
         System.out.println("Path to csv: " + path);
@@ -198,11 +213,14 @@ public class ApacheCsvUtils {
     /**
      * method write data with another separator in file CSV if data successful add return true else threw IOException
      *
-     * @param path
-     * @param separator
-     * @param data
+     * @param path path to our csv file
+     * @param separator for separate our data in csv file
+     * @param data  data which will add to csv file
      * @return  boolean value(true, false)
-     * @throws IOException
+     * @throws IOException if: the named file exists but is a directory rather than a regular file,
+     * does not exist but cannot be created, or cannot be opened for any other reason
+     * FileNotFoundException – if the named file does not exist, is a directory rather than a regular file,
+     * or for some other reason cannot be opened for reading.
      * */
     public static boolean writeUsingAnotherSeparator(String path, char separator, String ... data) throws Exception {
         System.out.println("Path to csv: " + path);
