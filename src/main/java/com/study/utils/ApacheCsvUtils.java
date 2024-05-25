@@ -3,16 +3,25 @@ package com.study.utils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * Utility class for working with CSV files using Apache Commons CSV library
  * */
 public class ApacheCsvUtils {
+
+    /**
+     * Logger instance for tracing errors and exceptions in the ApacheCsvUtils class.
+     * */
+    private static final Logger LOGGER = LogManager.getLogger(ApacheCsvUtils.class.getName());
+
     /**
      * The size of an empty file.
      * This constant represents the size in bytes for a file that has no content.
@@ -82,11 +91,13 @@ public class ApacheCsvUtils {
      * or for some other reason cannot be opened for reading.
      * */
    public static String[] readCsvHeaders(String path, String ... headers) throws IOException {
-        System.out.println("Path to csv: " + path);
+       LOGGER.trace("Start method readCsvHeaders");
+       LOGGER.info("Path to csv: {}", path);
 
         CSVRecord header;
 
         if (new File(path).length() == EMPTY_FILE_SIZE) {
+            LOGGER.error("File doesn't contain any data");
             return EMPTY_STRING_ARRAY;
         }
 
@@ -98,11 +109,11 @@ public class ApacheCsvUtils {
                     .build();
 
             header = csvFormat.parse(in).getRecords().get(HEADERS_INDEX);
-        } catch (IOException ex){
-            System.out.println(ex);
-            throw new IOException(ex);
+        } catch (IOException exception){
+            LOGGER.fatal("Error reading CSV file: ", exception.getMessage(), exception);
+            throw new IOException(exception.getMessage(), exception);
         }
-
+            LOGGER.trace("End method readCsvHeaders");
         return header.stream().toArray(String[]::new);
    }
 
@@ -118,11 +129,13 @@ public class ApacheCsvUtils {
      * or for some other reason cannot be opened for reading.
      * */
     public static Map<String, String> readCsvPayload(String path, String ... headers) throws IOException{
-        System.out.println("Path to csv: " + path);
+        LOGGER.trace("Start method readCsvPayload");
+        LOGGER.info("Path to csv: {}",path);
 
         Map<String, String> data = new HashMap<>();
 
         if (new File(path).length() == EMPTY_FILE_SIZE) {
+            LOGGER.error("File not contain any data");
             return data;
         }
 
@@ -139,10 +152,11 @@ public class ApacheCsvUtils {
                 data.put(record.get(HEADERS_IN_FILE[INDEX_OF_FIRST_COLUMN]),
                         record.get(HEADERS_IN_FILE[INDEX_OF_SECOND_COLUMN]));
             }
-        } catch (IOException ex){
-            throw new IOException(ex);
+        } catch (IOException exception){
+            LOGGER.fatal("Error reading CSV file: ", exception.getMessage(), exception);
+            throw new IOException(exception);
         }
-
+        LOGGER.trace("End method readCsvPayload");
         return data;
     }
 
@@ -159,7 +173,9 @@ public class ApacheCsvUtils {
      * or for some other reason cannot be opened for reading.
      * */
     public static boolean searchHeaders(String path, String ... headers) throws IOException {
-        System.out.println("Path to csv: " + path);
+        LOGGER.trace("Start method searchHeaders");
+        LOGGER.info("Path to csv: {}", path);
+        LOGGER.trace("End method searchHeaders");
         return Arrays.equals(headers,  readCsvHeaders(path, headers));
     }
 
@@ -175,7 +191,8 @@ public class ApacheCsvUtils {
      *  or for some other reason cannot be opened for reading.
      * */
     public static boolean writeCsvHeaders(String path, String ... headers) throws Exception {
-        System.out.println("Path to csv: " + path);
+        LOGGER.trace("Start method writeCsvHeaders");
+        LOGGER.info("Path to csv: {}", path);
 
         CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
                 .setHeader(headers)
@@ -183,15 +200,17 @@ public class ApacheCsvUtils {
                 .build();
 
         if(searchHeaders(path)){
+            LOGGER.error("File not contain any data");
             return FAIL_WRITE_IN_FILE;
         }
 
         try (CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(path, APPEND_IN_FILE), csvFormat)) {
             csvPrinter.printRecord(headers);
-        } catch(Exception ex) {
-            throw new IOException("Headers is exist" + ex);
+        } catch(Exception exception) {
+            LOGGER.fatal("Error reading CSV file: ", exception.getMessage(), exception);
+            throw new IOException(exception);
         }
-
+        LOGGER.trace("End method writeCsvHeaders");
         return SUCCESSFUL_WRITE_IN_FILE;
     }
 
@@ -207,7 +226,8 @@ public class ApacheCsvUtils {
      * or for some other reason cannot be opened for reading.
      * */
     public static boolean writeCsvPayload(String path, String ... data) throws IOException{
-        System.out.println("Path to csv: " + path);
+        LOGGER.trace("Start method writeCsvPayload");
+        LOGGER.info("Path to csv: {}", path);
 
         CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
                 .setHeader()
@@ -216,10 +236,11 @@ public class ApacheCsvUtils {
 
         try (CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(path, APPEND_IN_FILE), csvFormat)) {
             csvPrinter.printRecord(data);
-        }catch (IOException ex){
-            throw new IOException(ex);
+        }catch (IOException exception){
+            LOGGER.fatal("Error reading CSV file: ", exception.getMessage(), exception);
+            throw new IOException(exception);
         }
-
+        LOGGER.trace("End method writeCsvPayload");
         return SUCCESSFUL_WRITE_IN_FILE;
     }
 
@@ -236,7 +257,8 @@ public class ApacheCsvUtils {
      * or for some other reason cannot be opened for reading.
      * */
     public static boolean writeUsingAnotherSeparator(String path, char separator, String ... data) throws Exception {
-        System.out.println("Path to csv: " + path);
+        LOGGER.trace("Start method writeUsingAnotherSeparator");
+        LOGGER.info("Path to csv: {}", path);
 
         CSVFormat csvFormat = CSVFormat.DEFAULT.withDelimiter(separator).builder()
                 .setHeader()
@@ -246,9 +268,10 @@ public class ApacheCsvUtils {
         try (CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(path, APPEND_IN_FILE), csvFormat)) {
             csvPrinter.printRecord(data);
         } catch (IOException ex){
+            LOGGER.fatal("Error reading CSV file: ", ex.getMessage(), ex);
             throw new IOException(ex);
         }
-
+        LOGGER.trace("End method writeUsingAnotherSeparator");
         return SUCCESSFUL_WRITE_IN_FILE;
     }
 }
