@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %highlight{%%-5level}{FATAL=bg_red, ERROR=red, WARN=yellow,
+            INFO=green, DEBUG=cyan, TRACE=blue, ALL=bold white} - %msg%n" />
+        </Console>
+        <File name="File" fileName="logs.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %highlight{%%-5level}{FATAL=bg_red, ERROR=red, WARN=yellow,
+            INFO=green, DEBUG=cyan, TRACE=blue, ALL=bold white} - %msg%n" />
+        </File>
+    </Appenders>
+
+    <Loggers>
+<!--        <CustomLevels>-->
+<!--            <CustomLevel name="SUPER_LEVEL" intLevel="750" />-->
+<!--        </CustomLevels>-->
+        <Root level="ALL">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>
