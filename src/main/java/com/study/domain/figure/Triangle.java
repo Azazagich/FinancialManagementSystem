@@ -1,4 +1,4 @@
-package com.study.service.collections.impl;
+package com.study.domain.figure;
 
 import com.study.service.collections.Figure;
 import com.study.service.collections.Point;

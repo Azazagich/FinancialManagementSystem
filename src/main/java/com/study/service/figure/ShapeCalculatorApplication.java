@@ -1,9 +1,6 @@
-package com.study.service.collections;
+package com.study.service.figure;
 
-import com.study.service.collections.impl.Circle;
-import com.study.service.collections.impl.Rectangle;
-import com.study.service.collections.impl.Square;
-import com.study.service.collections.impl.Triangle;
+import com.study.domain.figure.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,7 +33,7 @@ public class ShapeCalculatorApplication {
         figures.add(triangle);
         figures.add(triangle2);
 
-        CalculatorService calculator = new CalculatorService();
+        CashFigureCalculateService calculator = new CashFigureCalculateService();
 
         calculator.calculatePerimeterOfFigures(figures);
 

@@ -1,6 +1,7 @@
-package com.study.service.collections;
+package com.study.service.figure;
 
-import com.study.service.collections.impl.Triangle;
+import com.study.domain.figure.Figure;
+import com.study.domain.figure.Triangle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,7 +12,7 @@ import java.util.*;
  * The CalculatorService class provides methods to calculate and
  * manage the perimeter and area of geometric figures.
  * */
-public class CalculatorService {
+public class CashFigureCalculateService {
 
     /**
      * Logger for logging information

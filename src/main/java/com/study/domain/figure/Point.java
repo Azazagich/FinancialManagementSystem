@@ -1,6 +1,5 @@
-package com.study.service.collections;
+package com.study.domain.figure;
 
-import com.study.service.collections.impl.Triangle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

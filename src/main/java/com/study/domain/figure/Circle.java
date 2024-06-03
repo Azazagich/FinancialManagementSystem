@@ -1,4 +1,4 @@
-package com.study.service.collections.impl;
+package com.study.domain.figure;
 
 import com.study.service.collections.Figure;
 import org.apache.logging.log4j.LogManager;

@@ -1,7 +1,7 @@
-package com.study.service.collections.tests;
+package com.study.service.collections;
 
-import com.study.service.collections.Figure;
-import com.study.service.collections.impl.Circle;
+import com.study.domain.figure.Figure;
+import com.study.domain.figure.Circle;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

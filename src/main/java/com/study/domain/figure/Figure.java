@@ -1,8 +1,6 @@
-package com.study.service.collections;
+package com.study.domain.figure;
 
-import com.study.service.collections.impl.Square;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.study.domain.figure.Point;
 
 /**
  * The Figure interface represents geometric figures and defines methods for calculating their area and perimeter.
